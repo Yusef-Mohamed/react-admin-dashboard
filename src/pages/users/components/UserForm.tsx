@@ -1,12 +1,5 @@
 import { Button } from "../../../components/ui/button";
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from "../../../components/ui/form";
+import { Form, FormItem, FormLabel } from "../../../components/ui/form";
 import { Input } from "../../../components/ui/input";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
@@ -17,14 +10,9 @@ import { useNavigate, useParams } from "react-router-dom";
 import { createUser, editUser } from "../../../services/userApis";
 import { toast } from "../../../components/ui/use-toast";
 import { ApiError, IInputProps } from "../../../types";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "../../../components/ui/select";
+
 import { AiFillDelete } from "react-icons/ai";
+import FormFields from "../../../components/FormFields";
 const formSchema = z
   .object({
     name: z.string().min(3, { message: "Name must be at least 3 characters" }),
@@ -45,9 +33,6 @@ const formSchema = z
       .refine((value) => ["admin", "user"].includes(value), {
         message: "Role must be 'admin' or 'user'",
       }),
-    about: z
-      .string()
-      .min(10, { message: "About must be at least 10 characters" }),
   })
   .superRefine(({ passwordConfirm, password }, ctx) => {
     if (passwordConfirm !== password) {
@@ -105,13 +90,6 @@ const inputs: MyInputProps[] = [
     label: "Phone",
     placeholder: "Enter your phone...",
   },
-
-  {
-    type: "text",
-    name: "about",
-    label: "About",
-    placeholder: "Enter your about...",
-  },
 ];
 interface UserFormProps {
   isEdit: boolean;
@@ -124,7 +102,6 @@ const UserForm: React.FC<UserFormProps> = ({
     name: "",
     phone: "",
     role: "user",
-    about: "",
     password: "",
     passwordConfirm: "",
   },
@@ -157,7 +134,6 @@ const UserForm: React.FC<UserFormProps> = ({
     });
     try {
       if (isEdit) {
-        console.log("edit");
         await editUser(formData, id || "");
         toast({
           title: "Success",
@@ -183,16 +159,6 @@ const UserForm: React.FC<UserFormProps> = ({
     } finally {
       setLoading(false);
     }
-
-    // try {
-    //   await login(data.email, data.password);
-    //   nav("/dashboard");
-    // } catch (error) {
-    //   const typedError = error as AxiosError<{ message: string }>;
-    //   setFormError(typedError?.response?.data?.message || "An error occurred");
-    // } finally {
-    //   setLoading(false);
-    // }
   };
 
   return (
@@ -240,65 +206,12 @@ const UserForm: React.FC<UserFormProps> = ({
                 }}
               />
             </FormItem>
-            {inputs.map((input) => {
-              if (input.hideOnEdit && isEdit) return null;
-              if (input.type === "select") {
-                return (
-                  <FormField
-                    key={input.name}
-                    control={form.control}
-                    name={input.name}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{input.label}</FormLabel>
-                        <Select
-                          onValueChange={field.onChange}
-                          defaultValue={field.value}
-                          disabled={loading}
-                          {...field}
-                        >
-                          <FormControl>
-                            <SelectTrigger className="w-full">
-                              <SelectValue placeholder={input.placeholder} />
-                            </SelectTrigger>
-                          </FormControl>
-                          <SelectContent>
-                            {input.values?.map((value) => (
-                              <SelectItem key={value.value} value={value.value}>
-                                {value.label}
-                              </SelectItem>
-                            ))}
-                          </SelectContent>
-                        </Select>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              } else {
-                return (
-                  <FormField
-                    key={input.name}
-                    control={form.control}
-                    name={input.name}
-                    render={({ field }) => (
-                      <FormItem>
-                        <FormLabel>{input.label}</FormLabel>
-                        <FormControl>
-                          <Input
-                            type={input.type}
-                            placeholder={input.placeholder}
-                            disabled={loading}
-                            {...field}
-                          />
-                        </FormControl>
-                        <FormMessage />
-                      </FormItem>
-                    )}
-                  />
-                );
-              }
-            })}
+            <FormFields<UserFormValue>
+              inputs={inputs}
+              form={form}
+              loading={loading}
+              isEdit={isEdit}
+            />
           </div>
           {formError && (
             <div className="text-red-500 text-sm mb-2">{formError}</div>

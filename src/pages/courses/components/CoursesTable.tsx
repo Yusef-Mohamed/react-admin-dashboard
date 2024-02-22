@@ -17,7 +17,7 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { AiFillDelete } from "react-icons/ai";
-import { IUser } from "../../../types";
+import { ICourse } from "../../../types";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { Link } from "react-router-dom";
 import {
@@ -31,19 +31,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../components/ui/alert-dialog";
-import { deleteUser } from "../../../services/userApis";
+import { deleteCourse } from "../../../services/courseApis";
 import { toast } from "../../../components/ui/use-toast";
 import { useState } from "react";
-interface IUsersTableProps {
-  users: IUser[];
+import ImageCell from "../../../components/ImageCell";
+interface ICoursesTableProps {
+  courses: ICourse[];
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
 }
-const UsersTable: React.FC<IUsersTableProps> = ({
+const CoursesTable: React.FC<ICoursesTableProps> = ({
   error,
   isLoading,
-  users,
+  courses,
   refetch,
 }) => {
   return (
@@ -51,10 +52,11 @@ const UsersTable: React.FC<IUsersTableProps> = ({
       <Table className="border">
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Active</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Description</TableHead>
+            <TableHead>Price</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Image</TableHead>
             <TableHead className="w-24"></TableHead>
           </TableRow>
         </TableHeader>
@@ -87,8 +89,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
               </TableRow>
             ))}
           {!isLoading &&
-            users.map((user) => (
-              <UserRow refetch={refetch} key={user._id} user={user} />
+            courses.map((course) => (
+              <CourseRow refetch={refetch} key={course._id} course={course} />
             ))}
         </TableBody>
       </Table>
@@ -96,10 +98,10 @@ const UsersTable: React.FC<IUsersTableProps> = ({
   );
 };
 
-export default UsersTable;
+export default CoursesTable;
 
-const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
-  user,
+const CourseRow: React.FC<{ course: ICourse; refetch: () => void }> = ({
+  course,
   refetch,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,10 +109,10 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
   const deleteHandler = async () => {
     setIsLoading(true);
     try {
-      await deleteUser(user._id);
+      await deleteCourse(course._id);
       toast({
         title: "Success",
-        description: "User deleted successfully",
+        description: "Course deleted successfully",
       });
     } catch (err) {
       toast({
@@ -127,10 +129,13 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
   return (
     <>
       <TableRow>
-        <TableCell>{user.name}</TableCell>
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.role}</TableCell>
-        <TableCell>{user.active ? "active" : "not active"}</TableCell>
+        <TableCell>{course.title}</TableCell>
+        <TableCell>{course.description}</TableCell>
+        <TableCell>{course.price}</TableCell>
+        <TableCell>{course.category.title}</TableCell>
+        <TableCell>
+          <ImageCell url={course.image} />
+        </TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,7 +146,7 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
             <DropdownMenuContent>
               <DropdownMenuLabel asChild>
                 <Link
-                  to={`/dashboard/users/${user._id}`}
+                  to={`/dashboard/courses/${course._id}`}
                   className="flex items-center  gap-2"
                 >
                   <CiEdit size={18} />
@@ -169,7 +174,7 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  user and remove data from our servers.
+                  course and remove data from our servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

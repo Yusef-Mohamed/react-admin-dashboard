@@ -5,14 +5,15 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsersWithParams } from "../../services/userApis";
-import UsersTable from "./components/UsersTable";
+import { getAllBlogsWithParams } from "../../services/blogApis";
+import BlogsTable from "./components/BlogsTable";
 import { useState } from "react";
-import { IPagination, IUser } from "../../types";
+import { IPagination, IBlog } from "../../types";
 import PaginationHandler from "../../components/PaginationHandler";
-const breadcrumbItems = [{ title: "Users", link: "/dashboard/users" }];
 
-export default function UsersPage() {
+const breadcrumbItems = [{ title: "Blogs", link: "/dashboard/blogs" }];
+
+export default function BlogsPage() {
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: 1,
     limit: 50,
@@ -20,9 +21,9 @@ export default function UsersPage() {
     results: 0,
   });
   const { isLoading, error, data, refetch, isRefetching } = useQuery({
-    queryKey: ["users", `page=${pagination.currentPage}`],
+    queryKey: ["blogs", `page=${pagination.currentPage}`],
     queryFn: async () => {
-      const response = await getAllUsersWithParams(
+      const response = await getAllBlogsWithParams(
         `?page=${pagination.currentPage}`
       );
       setPagination((prev) => ({
@@ -30,7 +31,7 @@ export default function UsersPage() {
         numberOfPages: response.paginationResult.numberOfPages,
         results: response.results,
       }));
-      return response.data as IUser[];
+      return response.data as IBlog[];
     },
   });
   return (
@@ -40,20 +41,21 @@ export default function UsersPage() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Users (${pagination.results})`}
-            description="Manage userss"
+            title={`Blogs (${pagination.results})`}
+            description="Manage blogss"
           />
 
           <Button asChild>
-            <Link to={"/dashboard/users/new"}>
+            <Link to={"/dashboard/blogs/new"}>
               <Plus className="mr-2 h-4 w-4" /> Add New
             </Link>
           </Button>
         </div>
+
         <Separator />
 
-        <UsersTable
-          users={data || []}
+        <BlogsTable
+          blogs={data || []}
           isLoading={isLoading || isRefetching}
           error={error}
           refetch={refetch}

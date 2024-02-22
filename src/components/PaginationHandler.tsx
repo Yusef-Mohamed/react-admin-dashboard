@@ -13,9 +13,6 @@ const PaginationHandler: React.FC<PaginationHandlerProps> = ({
 }) => {
   return (
     <>
-      <p className="text-center text-sm mt-4">
-        Page {page} of {totalPages}
-      </p>
       <div className="flex items-center justify-center gap-4">
         <Button
           variant={"ghost"}

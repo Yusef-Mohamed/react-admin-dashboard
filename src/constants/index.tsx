@@ -4,7 +4,7 @@ import { NavItem } from "../types";
 export const navItems: NavItem[] = [
   {
     title: "Overview",
-    to: "/dashboard",
+    to: "/dashboard/overview",
     icon: <BarChart className="mr-1" />,
   },
   {
@@ -13,14 +13,24 @@ export const navItems: NavItem[] = [
     icon: <UserIcon className="mr-1" />,
   },
   {
-    title: "Blog",
-    to: "/settings",
+    title: "Categories",
+    to: "/dashboard/categories",
+    icon: <Share2Icon className="mr-1" />,
+    // icon: </>,
+  },
+  {
+    title: "Courses",
+    to: "/dashboard/courses",
     icon: <Share2Icon className="mr-1" />,
   },
   {
-    title: "Categories",
-    to: "/logout",
+    title: "Lessons",
+    to: "/dashboard/lessons",
     icon: <Share2Icon className="mr-1" />,
-    // icon: </>,
+  },
+  {
+    title: "Blog",
+    to: "/dashboard/blogs",
+    icon: <Share2Icon className="mr-1" />,
   },
 ];

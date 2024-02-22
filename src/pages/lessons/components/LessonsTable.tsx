@@ -17,7 +17,7 @@ import {
 import { BsThreeDots } from "react-icons/bs";
 import { CiEdit } from "react-icons/ci";
 import { AiFillDelete } from "react-icons/ai";
-import { IUser } from "../../../types";
+import { ILesson } from "../../../types";
 import { Skeleton } from "../../../components/ui/skeleton";
 import { Link } from "react-router-dom";
 import {
@@ -31,19 +31,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../components/ui/alert-dialog";
-import { deleteUser } from "../../../services/userApis";
+import { deleteLesson } from "../../../services/lessonApis";
 import { toast } from "../../../components/ui/use-toast";
 import { useState } from "react";
-interface IUsersTableProps {
-  users: IUser[];
+import ImageCell from "../../../components/ImageCell";
+interface ILessonsTableProps {
+  lessons: ILesson[];
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
 }
-const UsersTable: React.FC<IUsersTableProps> = ({
+const LessonsTable: React.FC<ILessonsTableProps> = ({
   error,
   isLoading,
-  users,
+  lessons,
   refetch,
 }) => {
   return (
@@ -51,10 +52,10 @@ const UsersTable: React.FC<IUsersTableProps> = ({
       <Table className="border">
         <TableHeader>
           <TableRow>
-            <TableHead>Name</TableHead>
-            <TableHead>Email</TableHead>
-            <TableHead>Role</TableHead>
-            <TableHead>Active</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Course</TableHead>
+            <TableHead>Video Url</TableHead>
+            <TableHead>Image</TableHead>
             <TableHead className="w-24"></TableHead>
           </TableRow>
         </TableHeader>
@@ -87,8 +88,8 @@ const UsersTable: React.FC<IUsersTableProps> = ({
               </TableRow>
             ))}
           {!isLoading &&
-            users.map((user) => (
-              <UserRow refetch={refetch} key={user._id} user={user} />
+            lessons.map((lesson) => (
+              <LessonRow refetch={refetch} key={lesson._id} lesson={lesson} />
             ))}
         </TableBody>
       </Table>
@@ -96,10 +97,10 @@ const UsersTable: React.FC<IUsersTableProps> = ({
   );
 };
 
-export default UsersTable;
+export default LessonsTable;
 
-const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
-  user,
+const LessonRow: React.FC<{ lesson: ILesson; refetch: () => void }> = ({
+  lesson,
   refetch,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -107,10 +108,10 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
   const deleteHandler = async () => {
     setIsLoading(true);
     try {
-      await deleteUser(user._id);
+      await deleteLesson(lesson._id);
       toast({
         title: "Success",
-        description: "User deleted successfully",
+        description: "Lesson deleted successfully",
       });
     } catch (err) {
       toast({
@@ -127,10 +128,12 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
   return (
     <>
       <TableRow>
-        <TableCell>{user.name}</TableCell>
-        <TableCell>{user.email}</TableCell>
-        <TableCell>{user.role}</TableCell>
-        <TableCell>{user.active ? "active" : "not active"}</TableCell>
+        <TableCell>{lesson.title}</TableCell>
+        <TableCell>{lesson.course.title}</TableCell>
+        <TableCell>{lesson.videoUrl}</TableCell>
+        <TableCell>
+          <ImageCell url={lesson.image} />
+        </TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -141,7 +144,7 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
             <DropdownMenuContent>
               <DropdownMenuLabel asChild>
                 <Link
-                  to={`/dashboard/users/${user._id}`}
+                  to={`/dashboard/lessons/${lesson._id}`}
                   className="flex items-center  gap-2"
                 >
                   <CiEdit size={18} />
@@ -169,7 +172,7 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
                   This action cannot be undone. This will permanently delete
-                  user and remove data from our servers.
+                  lesson and remove data from our servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

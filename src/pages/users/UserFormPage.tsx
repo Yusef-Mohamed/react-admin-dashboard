@@ -23,7 +23,6 @@ export default function UserFormPage() {
       return response.data as IUser;
     },
   });
-  console.log(data);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
@@ -43,7 +42,6 @@ export default function UserFormPage() {
               name: data?.name || "",
               phone: data?.phone || "",
               role: data?.role || "user",
-              about: data?.about || "",
               password: "123456789",
               passwordConfirm: "123456789",
             }}

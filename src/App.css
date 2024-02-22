@@ -57,3 +57,6 @@
     @apply bg-background text-foreground;
   }
 }
+a.active {
+  @apply bg-accent text-accent-foreground rounded-xl;
+}

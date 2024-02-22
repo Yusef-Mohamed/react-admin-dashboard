@@ -4,7 +4,6 @@ export interface IUser {
   role: "user" | "admin";
   _id: string;
   phone: string;
-  about: string;
   createdAt: string;
   updatedAt: string;
   active: boolean;
@@ -26,7 +25,14 @@ export interface ApiError {
   msg: string;
 }
 export interface IInputProps {
-  type: string;
+  type:
+    | "text"
+    | "email"
+    | "password"
+    | "textArea"
+    | "select"
+    | "file"
+    | "number";
   label: string;
   placeholder: string;
   hideOnEdit?: boolean;
@@ -34,4 +40,36 @@ export interface IInputProps {
     value: string;
     label: string;
   }[];
+}
+export interface ICategory {
+  title: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface ICourse {
+  title: string;
+  description: string;
+  image: string;
+  price: string;
+  category: ICategory;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface ILesson {
+  course: ICourse;
+  title: string;
+  image: string;
+  videoUrl: string;
+  _id: string;
+}
+export interface IBlog {
+  title: string;
+  videoUrl: string;
+  imageCover: string;
+  description: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 }

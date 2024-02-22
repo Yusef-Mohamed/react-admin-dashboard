@@ -5,14 +5,14 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsersWithParams } from "../../services/userApis";
-import UsersTable from "./components/UsersTable";
+import { getAllCoursesWithParams } from "../../services/courseApis";
+import CoursesTable from "./components/CoursesTable";
 import { useState } from "react";
-import { IPagination, IUser } from "../../types";
+import { IPagination, ICourse } from "../../types";
 import PaginationHandler from "../../components/PaginationHandler";
-const breadcrumbItems = [{ title: "Users", link: "/dashboard/users" }];
+const breadcrumbItems = [{ title: "Courses", link: "/dashboard/courses" }];
 
-export default function UsersPage() {
+export default function CoursesPage() {
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: 1,
     limit: 50,
@@ -20,9 +20,9 @@ export default function UsersPage() {
     results: 0,
   });
   const { isLoading, error, data, refetch, isRefetching } = useQuery({
-    queryKey: ["users", `page=${pagination.currentPage}`],
+    queryKey: ["courses", `page=${pagination.currentPage}`],
     queryFn: async () => {
-      const response = await getAllUsersWithParams(
+      const response = await getAllCoursesWithParams(
         `?page=${pagination.currentPage}`
       );
       setPagination((prev) => ({
@@ -30,9 +30,10 @@ export default function UsersPage() {
         numberOfPages: response.paginationResult.numberOfPages,
         results: response.results,
       }));
-      return response.data as IUser[];
+      return response.data as ICourse[];
     },
   });
+
   return (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
@@ -40,20 +41,20 @@ export default function UsersPage() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Users (${pagination.results})`}
-            description="Manage userss"
+            title={`Courses (${pagination.results})`}
+            description="Manage coursess"
           />
 
           <Button asChild>
-            <Link to={"/dashboard/users/new"}>
+            <Link to={"/dashboard/courses/new"}>
               <Plus className="mr-2 h-4 w-4" /> Add New
             </Link>
           </Button>
         </div>
         <Separator />
 
-        <UsersTable
-          users={data || []}
+        <CoursesTable
+          courses={data || []}
           isLoading={isLoading || isRefetching}
           error={error}
           refetch={refetch}

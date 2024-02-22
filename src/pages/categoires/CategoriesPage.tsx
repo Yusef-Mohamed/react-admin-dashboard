@@ -5,14 +5,16 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsersWithParams } from "../../services/userApis";
-import UsersTable from "./components/UsersTable";
+import CategoriesTable from "./components/CategoriesTable";
 import { useState } from "react";
-import { IPagination, IUser } from "../../types";
+import { IPagination, ICategory } from "../../types";
 import PaginationHandler from "../../components/PaginationHandler";
-const breadcrumbItems = [{ title: "Users", link: "/dashboard/users" }];
+import { getCategories } from "../../services/categoryApis";
+const breadcrumbItems = [
+  { title: "Categories", link: "/dashboard/categories" },
+];
 
-export default function UsersPage() {
+export default function CategoriesPage() {
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: 1,
     limit: 50,
@@ -20,17 +22,15 @@ export default function UsersPage() {
     results: 0,
   });
   const { isLoading, error, data, refetch, isRefetching } = useQuery({
-    queryKey: ["users", `page=${pagination.currentPage}`],
+    queryKey: ["categories", `page=${pagination.currentPage}`],
     queryFn: async () => {
-      const response = await getAllUsersWithParams(
-        `?page=${pagination.currentPage}`
-      );
+      const response = await getCategories(`?page=${pagination.currentPage}`);
       setPagination((prev) => ({
         ...prev,
         numberOfPages: response.paginationResult.numberOfPages,
         results: response.results,
       }));
-      return response.data as IUser[];
+      return response.data as ICategory[];
     },
   });
   return (
@@ -40,20 +40,20 @@ export default function UsersPage() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Users (${pagination.results})`}
-            description="Manage userss"
+            title={`Categories (${pagination.results})`}
+            description="Manage categories"
           />
 
           <Button asChild>
-            <Link to={"/dashboard/users/new"}>
+            <Link to={"/dashboard/categories/new"}>
               <Plus className="mr-2 h-4 w-4" /> Add New
             </Link>
           </Button>
         </div>
         <Separator />
 
-        <UsersTable
-          users={data || []}
+        <CategoriesTable
+          categories={data || []}
           isLoading={isLoading || isRefetching}
           error={error}
           refetch={refetch}

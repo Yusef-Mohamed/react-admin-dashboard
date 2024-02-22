@@ -4,7 +4,7 @@ import { DashboardNav } from "./DashboardNav";
 
 export default function Sidebar() {
   return (
-    <nav className={cn(`relative hidden h-screen border-r lg:block w-72`)}>
+    <nav className={cn(`relative hidden border-r min-h-[92vh] lg:block w-72 `)}>
       <div className="space-y-4 py-4">
         <div className="px-3 py-2">
           <div className="space-y-1">
