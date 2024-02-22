@@ -173,7 +173,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
                     <ReactQuill
                       className="h-64 text-foreground"
                       {...field}
-                      onChange={(content, delta, source, editor) =>
+                      onChange={(_content, _delta, _source, editor) =>
                         field.onChange(editor.getHTML())
                       }
                       value={field.value}
