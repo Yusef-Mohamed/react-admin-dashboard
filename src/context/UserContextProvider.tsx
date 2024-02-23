@@ -14,6 +14,7 @@ type AuthContextType = {
   user: IUser | null;
   login: (username: string, password: string) => void;
   logout: () => void;
+  token: string | null;
 };
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -44,8 +45,10 @@ export const AuthProvider = ({ children }: { children: ReactNode }) => {
   };
 
   const logout = () => {
-    setUser(null);
     removeCookie("user");
+    removeCookie("token");
+    setUser(null);
+    setToken(null);
   };
 
   const value = { user, login, logout, token };

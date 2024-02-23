@@ -1,5 +1,9 @@
-import { BarChart, Share2Icon, UserIcon } from "lucide-react";
+import { BarChart, UserIcon } from "lucide-react";
 import { NavItem } from "../types";
+import { BiSolidCategoryAlt } from "react-icons/bi";
+import { MdOutlineCastForEducation } from "react-icons/md";
+import { PiStudentBold } from "react-icons/pi";
+import { TfiWrite } from "react-icons/tfi";
 
 export const navItems: NavItem[] = [
   {
@@ -15,22 +19,21 @@ export const navItems: NavItem[] = [
   {
     title: "Categories",
     to: "/dashboard/categories",
-    icon: <Share2Icon className="mr-1" />,
-    // icon: </>,
+    icon: <BiSolidCategoryAlt className="mr-1" />,
   },
   {
     title: "Courses",
     to: "/dashboard/courses",
-    icon: <Share2Icon className="mr-1" />,
+    icon: <PiStudentBold className="mr-1" />,
   },
   {
     title: "Lessons",
     to: "/dashboard/lessons",
-    icon: <Share2Icon className="mr-1" />,
+    icon: <MdOutlineCastForEducation className="mr-1" />,
   },
   {
     title: "Blog",
     to: "/dashboard/blogs",
-    icon: <Share2Icon className="mr-1" />,
+    icon: <TfiWrite className="mr-1" />,
   },
 ];

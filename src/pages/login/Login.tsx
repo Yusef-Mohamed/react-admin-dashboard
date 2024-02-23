@@ -1,6 +1,12 @@
+import { Navigate } from "react-router-dom";
+import { useAuth } from "../../context/UserContextProvider";
 import UserAuthForm from "./components/UserAuthForm";
 
 const Login = () => {
+  const { user, token } = useAuth();
+  if (user?.role === "admin" && token) {
+    return <Navigate to="/dashboard" />;
+  }
   return (
     <>
       <div className="relative h-screen flex-col items-center justify-center md:grid lg:max-w-none lg:grid-cols-2 lg:px-0">
