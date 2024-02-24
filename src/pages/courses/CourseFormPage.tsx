@@ -51,6 +51,7 @@ export default function CourseFormPage() {
               description: data.description,
               category: data.category._id,
               price: `${data.price}`,
+              priceAfterDiscount: `${data.priceAfterDiscount}`,
             }}
           />
         )}

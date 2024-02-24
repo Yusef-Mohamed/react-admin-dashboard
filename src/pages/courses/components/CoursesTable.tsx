@@ -131,7 +131,19 @@ const CourseRow: React.FC<{ course: ICourse; refetch: () => void }> = ({
       <TableRow>
         <TableCell>{course.title}</TableCell>
         <TableCell>{course.description}</TableCell>
-        <TableCell>{course.price}</TableCell>
+        <TableCell>
+          {!course?.priceAfterDiscount ? (
+            <>{course.price} $</>
+          ) : (
+            <>
+              {" "}
+              <del className="text-destructive font-semibold">
+                {course.price}
+              </del>{" "}
+              - {course.priceAfterDiscount} $
+            </>
+          )}
+        </TableCell>
         <TableCell>{course.category.title}</TableCell>
         <TableCell>
           <ImageCell url={course.image} />

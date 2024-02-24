@@ -21,6 +21,10 @@ const formSchema = z.object({
   }),
   category: z.string().min(1, { message: "You must select category" }),
   price: z.string().min(1, { message: "Price must be at least 1" }),
+  priceAfterDiscount: z
+    .string()
+    .min(1, { message: "Price must be at least 1" })
+    .optional(),
 });
 
 type CourseFormValue = z.infer<typeof formSchema>;
@@ -40,6 +44,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
     title: "",
     description: "",
     price: "",
+    priceAfterDiscount: "",
     category: "",
   },
 }) => {
@@ -61,6 +66,13 @@ const CourseForm: React.FC<CourseFormProps> = ({
       label: "Price",
       placeholder: "Enter price",
       name: "price",
+    },
+
+    {
+      type: "number",
+      label: "Price After Discount",
+      placeholder: "Enter Price After Discount",
+      name: "priceAfterDiscount",
     },
     {
       type: "select",
@@ -89,11 +101,26 @@ const CourseForm: React.FC<CourseFormProps> = ({
     setLoading(true);
     setFormError("");
     // check if price is number
-    console.log(data.price, "price");
     if (isNaN(Number(data.price))) {
       form.setError("price", {
         type: "manual",
         message: "Price must be a number",
+      });
+      setLoading(false);
+      return;
+    }
+    if (isNaN(Number(data.priceAfterDiscount))) {
+      form.setError("priceAfterDiscount", {
+        type: "manual",
+        message: "Price After Discount number",
+      });
+      setLoading(false);
+      return;
+    }
+    if (data?.priceAfterDiscount && +data?.priceAfterDiscount > +data.price) {
+      form.setError("priceAfterDiscount", {
+        type: "manual",
+        message: "Price After Discount must be less than price",
       });
       setLoading(false);
       return;

@@ -52,6 +52,7 @@ export interface ICourse {
   description: string;
   image: string;
   price: string;
+  priceAfterDiscount?: string;
   category: ICategory;
   _id: string;
   createdAt: string;

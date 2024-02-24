@@ -9,7 +9,7 @@ const DashBoardLayout = () => {
   const { logout } = useAuth();
   const user = getCookie<IUser>("user");
   const token = getCookie("token");
-  if (user?.role !== "admin" && !token) {
+  if (!user || user?.role !== "admin" || !token) {
     logout();
     return <Navigate to="/" />;
   }
