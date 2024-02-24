@@ -129,7 +129,7 @@ const BlogRow: React.FC<{ blog: IBlog; refetch: () => void }> = ({
     <>
       <TableRow>
         <TableCell>{blog.title}</TableCell>
-        <TableCell>Description</TableCell>
+        <TableCell className="line-clamp-2">{blog.description}</TableCell>
         <TableCell>{blog.videoUrl}</TableCell>
         <TableCell>
           <ImageCell url={blog.imageCover} />

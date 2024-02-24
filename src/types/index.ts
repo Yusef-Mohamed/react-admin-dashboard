@@ -68,6 +68,7 @@ export interface IBlog {
   title: string;
   videoUrl: string;
   imageCover: string;
+  content: string;
   description: string;
   _id: string;
   createdAt: string;

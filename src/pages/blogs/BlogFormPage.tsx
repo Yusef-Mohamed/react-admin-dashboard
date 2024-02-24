@@ -43,11 +43,13 @@ export default function BlogFormPage() {
                     title: data.title,
                     videoUrl: data.videoUrl,
                     description: data.description,
+                    content: data.content,
                   }
                 : {
                     title: "",
                     videoUrl: "",
                     description: "",
+                    content: "",
                   }
             }
           />

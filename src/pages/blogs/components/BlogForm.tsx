@@ -29,6 +29,7 @@ const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
   videoUrl: z.string(),
   description: z.string(),
+  content: z.string(),
 });
 type BlogFormValue = z.infer<typeof formSchema>;
 interface MyInputProps extends IInputProps {
@@ -43,6 +44,7 @@ const BlogForm: React.FC<BlogFormProps> = ({
   defaultValues = {
     title: "",
     description: "",
+    content: "",
     videoUrl: "",
   },
 }) => {
@@ -64,6 +66,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
       label: "Video Url",
       placeholder: "Enter video url",
       name: "videoUrl",
+    },
+    {
+      type: "textArea",
+      label: "Description",
+      placeholder: "Enter description",
+      name: "description",
     },
   ];
   const form = useForm<BlogFormValue>({
@@ -164,11 +172,11 @@ const BlogForm: React.FC<BlogFormProps> = ({
           </div>
           <FormField
             control={form.control}
-            name={"description"}
+            name={"content"}
             render={({ field }) => {
               return (
                 <FormItem>
-                  <FormLabel>Description</FormLabel>
+                  <FormLabel>Content</FormLabel>
                   <FormControl>
                     <ReactQuill
                       className="h-64 text-foreground"
