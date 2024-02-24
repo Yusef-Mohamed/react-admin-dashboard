@@ -3,10 +3,11 @@ import Header from "./Header";
 import Sidebar from "./Sidebar";
 import { useAuth } from "../../context/UserContextProvider";
 import { getCookie } from "../../lib/cookies";
+import { IUser } from "../../types";
 
 const DashBoardLayout = () => {
   const { logout } = useAuth();
-  const user = getCookie("user");
+  const user = getCookie<IUser>("user");
   const token = getCookie("token");
   if (user?.role !== "admin" && !token) {
     logout();
