@@ -179,6 +179,47 @@ const BlogForm: React.FC<BlogFormProps> = ({
                   <FormLabel>Content</FormLabel>
                   <FormControl>
                     <ReactQuill
+                      modules={{
+                        toolbar: [
+                          [{ header: "2" }, { header: "3" }, { font: [] }],
+                          [{ size: [] }],
+                          [
+                            "bold",
+                            "italic",
+                            "underline",
+                            "strike",
+                            "blockquote",
+                          ],
+                          [
+                            { list: "ordered" },
+                            { list: "bullet" },
+                            { indent: "-1" },
+                            { indent: "+1" },
+                          ],
+                          ["link"],
+                          ["clean"],
+                        ],
+                        // Disable text color
+                        clipboard: {
+                          matchVisual: false,
+                        },
+                      }}
+                      formats={[
+                        "header",
+                        "font",
+                        "size",
+                        "bold",
+                        "italic",
+                        "underline",
+                        "strike",
+                        "blockquote",
+                        "list",
+                        "bullet",
+                        "indent",
+                        "link",
+                        "image",
+                        "video",
+                      ]}
                       className="h-64 text-foreground"
                       {...field}
                       onChange={(_content, _delta, _source, editor) =>
