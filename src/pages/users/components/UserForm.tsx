@@ -128,8 +128,9 @@ const UserForm: React.FC<UserFormProps> = ({
         if (key === "email" && isEdit) {
           if (value === defaultValues.email) return;
           formData.append(key, value);
+        } else {
+          formData.append(key, value);
         }
-        formData.append(key, value);
       }
     });
     try {
