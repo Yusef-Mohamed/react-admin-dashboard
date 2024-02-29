@@ -75,3 +75,14 @@ export interface IBlog {
   createdAt: string;
   updatedAt: string;
 }
+export interface IOrder {
+  user: IUser;
+  course: ICourse;
+  isPaid: boolean;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+  paidAt: string;
+  paymentMethodType: string;
+  totalOrderPrice: number;
+}

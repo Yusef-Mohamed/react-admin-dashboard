@@ -17,6 +17,8 @@ import LessonsPage from "./pages/lessons/LessonsPage";
 import LessonFormPage from "./pages/lessons/LessonFormPage";
 import BlogsPage from "./pages/blogs/BlogsPage";
 import BlogFormPage from "./pages/blogs/BlogFormPage";
+import OrdersPage from "./pages/orders/OrdersPage";
+import CourseDetails from "./pages/courses/CourseDetails";
 
 const queryClient = new QueryClient();
 
@@ -36,10 +38,12 @@ function App() {
                 <Route path="categories/:id" element={<CategoryFormPage />} />
                 <Route path="courses" element={<CoursesPage />} />
                 <Route path="courses/:id" element={<CourseFormPage />} />
+                <Route path="courses/:id/details" element={<CourseDetails />} />
                 <Route path="lessons" element={<LessonsPage />} />
                 <Route path="lessons/:id" element={<LessonFormPage />} />
                 <Route path="blogs" element={<BlogsPage />} />
                 <Route path="blogs/:id" element={<BlogFormPage />} />
+                <Route path="orders" element={<OrdersPage />} />
               </Route>
             </Routes>
             <Toaster />

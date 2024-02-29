@@ -5,35 +5,39 @@ import { Link } from "react-router-dom";
 import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
-import { getAllUsersWithParams } from "../../services/userApis";
-import UsersTable from "./components/UsersTable";
+import OrdersTable from "./components/OrdersTable";
 import { useState } from "react";
-import { IPagination, IUser } from "../../types";
+import { IPagination, IOrder } from "../../types";
 import PaginationHandler from "../../components/PaginationHandler";
-const breadcrumbItems = [{ title: "Users", link: "/dashboard/users" }];
+import { axiosInstance } from "../../services/axios.config";
+const breadcrumbItems = [{ title: "Orders", link: "/dashboard/orders" }];
 
-export default function UsersPage() {
+export default function OrdersPage() {
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: 1,
     limit: 50,
     numberOfPages: 1,
     results: 0,
   });
+  console.log(pagination);
   const { isLoading, error, data, refetch, isRefetching } = useQuery({
-    queryKey: ["users", `page=${pagination.currentPage}`],
+    queryKey: ["orders", `page=${pagination.currentPage}`],
     queryFn: async () => {
-      const response = await getAllUsersWithParams(
-        `?page=${pagination.currentPage}`
-      );
+      const response = await axiosInstance.get("/orders");
+      const responseData = response.data as {
+        paginationResult: IPagination;
+        data: IOrder[];
+        results: number;
+      };
+      console.log(responseData);
       setPagination((prev) => ({
         ...prev,
-        numberOfPages: response.paginationResult.numberOfPages,
-        results: response.results,
+        numberOfPages: responseData.paginationResult.numberOfPages,
+        results: responseData.results,
       }));
-      return response.data as IUser[];
+      return responseData.data as IOrder[];
     },
   });
-  console.log(data);
   return (
     <>
       <div className="flex-1 space-y-4  p-4 md:p-8 pt-6">
@@ -41,23 +45,22 @@ export default function UsersPage() {
 
         <div className="flex items-start justify-between">
           <Heading
-            title={`Users (${pagination.results})`}
-            description="Manage userss"
+            title={`Orders (${pagination.results})`}
+            description="Manage orders"
           />
 
           <Button asChild>
-            <Link to={"/dashboard/users/new"}>
+            <Link to={"/dashboard/orders/new"}>
               <Plus className="mr-2 h-4 w-4" /> Add New
             </Link>
           </Button>
         </div>
         <Separator />
 
-        <UsersTable
-          users={data || []}
+        <OrdersTable
+          orders={data || []}
           isLoading={isLoading || isRefetching}
           error={error}
-          withActions={true}
           refetch={refetch}
         />
         <PaginationHandler

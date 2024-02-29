@@ -4,6 +4,7 @@ import { BiSolidCategoryAlt } from "react-icons/bi";
 import { MdOutlineCastForEducation } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { TfiWrite } from "react-icons/tfi";
+import { FaMoneyBill1 } from "react-icons/fa6";
 
 export const navItems: NavItem[] = [
   {
@@ -35,5 +36,10 @@ export const navItems: NavItem[] = [
     title: "Blog",
     to: "/dashboard/blogs",
     icon: <TfiWrite className="mr-1" />,
+  },
+  {
+    title: "Orders",
+    to: "/dashboard/orders",
+    icon: <FaMoneyBill1 className="mr-1" />,
   },
 ];

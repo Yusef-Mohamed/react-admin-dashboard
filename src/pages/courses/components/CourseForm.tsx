@@ -21,10 +21,7 @@ const formSchema = z.object({
   }),
   category: z.string().min(1, { message: "You must select category" }),
   price: z.string().min(1, { message: "Price must be at least 1" }),
-  priceAfterDiscount: z
-    .string()
-    .min(1, { message: "Price must be at least 1" })
-    .optional(),
+  priceAfterDiscount: z.string().optional(),
 });
 
 type CourseFormValue = z.infer<typeof formSchema>;
@@ -109,7 +106,8 @@ const CourseForm: React.FC<CourseFormProps> = ({
       setLoading(false);
       return;
     }
-    if (isNaN(Number(data.priceAfterDiscount))) {
+    console.log(data.priceAfterDiscount);
+    if (isNaN(Number(data.priceAfterDiscount)) && data.priceAfterDiscount) {
       form.setError("priceAfterDiscount", {
         type: "manual",
         message: "Price After Discount number",
@@ -129,6 +127,9 @@ const CourseForm: React.FC<CourseFormProps> = ({
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value.toString());
     });
+    if (data.priceAfterDiscount === "") {
+      formData.delete("priceAfterDiscount");
+    }
     if (image) {
       formData.append("image", image);
     }

@@ -25,9 +25,8 @@ const formSchema = z
       .string()
       .min(8, { message: "Password must be at least 8 characters" })
       .optional(),
-    phone: z
-      .string()
-      .min(10, { message: "Phone number must be at least 10 characters" }),
+    phone: z.string().optional(),
+
     role: z
       .enum(["admin", "user"])
       .refine((value) => ["admin", "user"].includes(value), {
@@ -119,18 +118,18 @@ const UserForm: React.FC<UserFormProps> = ({
     setLoading(true);
     setFormError("");
     const formData = new FormData();
+    if (profileImg) {
+      formData.append("profileImg", profileImg);
+    }
     Object.entries(data).forEach(([key, value]) => {
-      if (key === "profileImg") {
-        formData.append("profileImg", value[0]);
+      if (key === "phone" && !data.phone) return;
+      if (key === "passwordConfirm" && isEdit) return;
+      if (key === "password" && isEdit) return;
+      if (key === "email" && isEdit) {
+        if (value === defaultValues.email) return;
+        formData.append(key, value);
       } else {
-        if (key === "passwordConfirm" && isEdit) return;
-        if (key === "password" && isEdit) return;
-        if (key === "email" && isEdit) {
-          if (value === defaultValues.email) return;
-          formData.append(key, value);
-        } else {
-          formData.append(key, value);
-        }
+        formData.append(key, value);
       }
     });
     try {

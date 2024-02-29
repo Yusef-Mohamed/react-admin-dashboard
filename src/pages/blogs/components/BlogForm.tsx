@@ -146,16 +146,12 @@ const BlogForm: React.FC<BlogFormProps> = ({
           </div>
           <div className="gap-2 w-full mb-4 grid grid-cols-2">
             <FormItem>
-              <FormLabel htmlFor="name">
-                ImageCover
-                <span className="text-sm font-normal text-gray-700">
-                  (optional)
-                </span>
-              </FormLabel>
+              <FormLabel htmlFor="name">ImageCover</FormLabel>
               <Input
                 type="file"
                 className="text-foreground"
                 disabled={loading}
+                required={!isEdit}
                 onChange={(e) => {
                   if (e.target.files) {
                     setImageCover(e.target.files[0]);
@@ -199,7 +195,6 @@ const BlogForm: React.FC<BlogFormProps> = ({
                           ["link"],
                           ["clean"],
                         ],
-                        // Disable text color
                         clipboard: {
                           matchVisual: false,
                         },

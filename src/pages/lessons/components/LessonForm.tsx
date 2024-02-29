@@ -148,7 +148,6 @@ const LessonForm: React.FC<LessonFormProps> = ({
               </FormLabel>
               <Input
                 type="file"
-                required={!isEdit}
                 className="text-foreground"
                 disabled={loading}
                 onChange={(e) => {

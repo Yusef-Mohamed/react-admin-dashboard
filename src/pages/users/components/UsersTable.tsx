@@ -39,12 +39,14 @@ interface IUsersTableProps {
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
+  withActions?: boolean;
 }
 const UsersTable: React.FC<IUsersTableProps> = ({
   error,
   isLoading,
   users,
   refetch,
+  withActions,
 }) => {
   return (
     <>
@@ -55,7 +57,7 @@ const UsersTable: React.FC<IUsersTableProps> = ({
             <TableHead>Email</TableHead>
             <TableHead>Role</TableHead>
             <TableHead>Active</TableHead>
-            <TableHead className="w-24"></TableHead>
+            {withActions && <TableHead className="w-24"></TableHead>}
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -88,7 +90,12 @@ const UsersTable: React.FC<IUsersTableProps> = ({
             ))}
           {!isLoading &&
             users.map((user) => (
-              <UserRow refetch={refetch} key={user._id} user={user} />
+              <UserRow
+                refetch={refetch}
+                withActions={withActions}
+                key={user._id}
+                user={user}
+              />
             ))}
         </TableBody>
       </Table>
@@ -98,10 +105,11 @@ const UsersTable: React.FC<IUsersTableProps> = ({
 
 export default UsersTable;
 
-const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
-  user,
-  refetch,
-}) => {
+const UserRow: React.FC<{
+  user: IUser;
+  refetch: () => void;
+  withActions?: boolean;
+}> = ({ user, withActions, refetch }) => {
   const [isOpen, setIsOpen] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const deleteHandler = async () => {
@@ -131,63 +139,68 @@ const UserRow: React.FC<{ user: IUser; refetch: () => void }> = ({
         <TableCell>{user.email}</TableCell>
         <TableCell>{user.role}</TableCell>
         <TableCell>{user.active ? "active" : "not active"}</TableCell>
-        <TableCell>
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button size={"sm"} variant="outline">
-                <BsThreeDots />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent>
-              <DropdownMenuLabel asChild>
-                <Link
-                  to={`/dashboard/users/${user._id}`}
-                  className="flex items-center  gap-2"
-                >
-                  <CiEdit size={18} />
-                  Edit
-                </Link>
-              </DropdownMenuLabel>
-              <DropdownMenuSeparator />
-              <DropdownMenuLabel>
-                <button
-                  onClick={() => {
-                    setIsOpen(true);
-                  }}
-                  className="flex items-center justify-center gap-2"
-                >
-                  <AiFillDelete size={18} />
-                  Delete
-                </button>
-              </DropdownMenuLabel>
-            </DropdownMenuContent>
-          </DropdownMenu>
-          <AlertDialog open={isOpen}>
-            <AlertDialogTrigger></AlertDialogTrigger>
-            <AlertDialogContent>
-              <AlertDialogHeader>
-                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                <AlertDialogDescription>
-                  This action cannot be undone. This will permanently delete
-                  user and remove data from our servers.
-                </AlertDialogDescription>
-              </AlertDialogHeader>
-              <AlertDialogFooter>
-                <AlertDialogCancel
-                  disabled={isLoading}
-                  onClick={() => {
-                    setIsOpen(false);
-                  }}
-                >
-                  Cancel
-                </AlertDialogCancel>
-                <AlertDialogAction disabled={isLoading} onClick={deleteHandler}>
-                  Continue
-                </AlertDialogAction>
-              </AlertDialogFooter>
-            </AlertDialogContent>
-          </AlertDialog>
-        </TableCell>
+        {withActions && (
+          <TableCell>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Button size={"sm"} variant="outline">
+                  <BsThreeDots />
+                </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent>
+                <DropdownMenuLabel asChild>
+                  <Link
+                    to={`/dashboard/users/${user._id}`}
+                    className="flex items-center  gap-2"
+                  >
+                    <CiEdit size={18} />
+                    Edit
+                  </Link>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuLabel>
+                  <button
+                    onClick={() => {
+                      setIsOpen(true);
+                    }}
+                    className="flex items-center justify-center gap-2"
+                  >
+                    <AiFillDelete size={18} />
+                    Delete
+                  </button>
+                </DropdownMenuLabel>
+              </DropdownMenuContent>
+            </DropdownMenu>
+            <AlertDialog open={isOpen}>
+              <AlertDialogTrigger></AlertDialogTrigger>
+              <AlertDialogContent>
+                <AlertDialogHeader>
+                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                  <AlertDialogDescription>
+                    This action cannot be undone. This will permanently delete
+                    user and remove data from our servers.
+                  </AlertDialogDescription>
+                </AlertDialogHeader>
+                <AlertDialogFooter>
+                  <AlertDialogCancel
+                    disabled={isLoading}
+                    onClick={() => {
+                      setIsOpen(false);
+                    }}
+                  >
+                    Cancel
+                  </AlertDialogCancel>
+                  <AlertDialogAction
+                    disabled={isLoading}
+                    onClick={deleteHandler}
+                  >
+                    Continue
+                  </AlertDialogAction>
+                </AlertDialogFooter>
+              </AlertDialogContent>
+            </AlertDialog>
+          </TableCell>
+        )}
       </TableRow>
     </>
   );

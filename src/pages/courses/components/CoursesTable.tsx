@@ -166,6 +166,17 @@ const CourseRow: React.FC<{ course: ICourse; refetch: () => void }> = ({
                 </Link>
               </DropdownMenuLabel>
               <DropdownMenuSeparator />
+              <DropdownMenuLabel asChild>
+                <Link
+                  to={`/dashboard/courses/${course._id}/details`}
+                  className="flex items-center  gap-2"
+                >
+                  <CiEdit size={18} />
+                  Details
+                </Link>
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
               <DropdownMenuLabel>
                 <button
                   onClick={() => {

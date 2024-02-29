@@ -17,3 +17,9 @@ export const deleteCourse = async (id: string) => {
   const res = await axiosInstance.delete(`/courses/${id}`);
   return res.data;
 };
+export const addUserToCourse = async (id: string, email: string) => {
+  const res = await axiosInstance.post(`/courses/${id}/addUserToCourse`, {
+    email: email,
+  });
+  return res.data;
+};
