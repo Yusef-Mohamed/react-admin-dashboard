@@ -19,6 +19,8 @@ import BlogsPage from "./pages/blogs/BlogsPage";
 import BlogFormPage from "./pages/blogs/BlogFormPage";
 import OrdersPage from "./pages/orders/OrdersPage";
 import CourseDetails from "./pages/courses/CourseDetails";
+import BooksPage from "./pages/books/BooksPage";
+import BookFormPage from "./pages/books/BookFormPage";
 
 const queryClient = new QueryClient();
 
@@ -39,6 +41,9 @@ function App() {
                 <Route path="courses" element={<CoursesPage />} />
                 <Route path="courses/:id" element={<CourseFormPage />} />
                 <Route path="courses/:id/details" element={<CourseDetails />} />
+                <Route path="books" element={<BooksPage />} />
+                <Route path="books/:id" element={<BookFormPage />} />
+
                 <Route path="lessons" element={<LessonsPage />} />
                 <Route path="lessons/:id" element={<LessonFormPage />} />
                 <Route path="blogs" element={<BlogsPage />} />

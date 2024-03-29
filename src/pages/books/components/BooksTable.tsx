@@ -1,3 +1,11 @@
+import { Button } from "../../../components/ui/button";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from "../../../components/ui/dropdown-menu";
 import {
   Table,
   TableBody,
@@ -6,18 +14,12 @@ import {
   TableHeader,
   TableRow,
 } from "../../../components/ui/table";
-import { IOrder } from "../../../types";
-import { Skeleton } from "../../../components/ui/skeleton";
-import { useState } from "react";
-import { toast } from "../../../components/ui/use-toast";
-import { DropdownMenu } from "@radix-ui/react-dropdown-menu";
-import {
-  DropdownMenuContent,
-  DropdownMenuLabel,
-  DropdownMenuTrigger,
-} from "../../../components/ui/dropdown-menu";
-import { Button } from "../../../components/ui/button";
 import { BsThreeDots } from "react-icons/bs";
+import { CiEdit } from "react-icons/ci";
+import { AiFillDelete } from "react-icons/ai";
+import { IBook } from "../../../types";
+import { Skeleton } from "../../../components/ui/skeleton";
+import { Link } from "react-router-dom";
 import {
   AlertDialog,
   AlertDialogAction,
@@ -29,18 +31,20 @@ import {
   AlertDialogTitle,
   AlertDialogTrigger,
 } from "../../../components/ui/alert-dialog";
-import { MdOutlineSell } from "react-icons/md";
-import { axiosInstance } from "../../../services/axios.config";
-interface IOrdersTableProps {
-  orders: IOrder[];
+import { deleteBook } from "../../../services/bookApis";
+import { toast } from "../../../components/ui/use-toast";
+import { useState } from "react";
+import ImageCell from "../../../components/ImageCell";
+interface IBooksTableProps {
+  books: IBook[];
   isLoading: boolean;
   error: Error | null;
   refetch: () => void;
 }
-const OrdersTable: React.FC<IOrdersTableProps> = ({
+const BooksTable: React.FC<IBooksTableProps> = ({
   error,
   isLoading,
-  orders,
+  books,
   refetch,
 }) => {
   return (
@@ -48,13 +52,10 @@ const OrdersTable: React.FC<IOrdersTableProps> = ({
       <Table className="border">
         <TableHeader>
           <TableRow>
-            <TableHead>Total Price</TableHead>
-            <TableHead>Course</TableHead>
-            <TableHead>User email</TableHead>
-            <TableHead>Is paid</TableHead>
-            <TableHead>Paid at</TableHead>
-            <TableHead>Paid with</TableHead>
-            <TableHead>Recive</TableHead>
+            <TableHead>Title</TableHead>
+            <TableHead>Link</TableHead>
+
+            <TableHead>Image</TableHead>
             <TableHead className="w-24"></TableHead>
           </TableRow>
         </TableHeader>
@@ -84,14 +85,11 @@ const OrdersTable: React.FC<IOrdersTableProps> = ({
                 <TableCell className="text-center">
                   <Skeleton className="w-full p-2 rounded-xl" />
                 </TableCell>
-                <TableCell className="text-center">
-                  <Skeleton className="w-full p-2 rounded-xl" />
-                </TableCell>
               </TableRow>
             ))}
           {!isLoading &&
-            orders.map((order) => (
-              <OrderRow refetch={refetch} key={order._id} order={order} />
+            books.map((book) => (
+              <BookRow refetch={refetch} key={book._id} book={book} />
             ))}
         </TableBody>
       </Table>
@@ -99,10 +97,10 @@ const OrdersTable: React.FC<IOrdersTableProps> = ({
   );
 };
 
-export default OrdersTable;
+export default BooksTable;
 
-const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
-  order,
+const BookRow: React.FC<{ book: IBook; refetch: () => void }> = ({
+  book,
   refetch,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
@@ -110,10 +108,10 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
   const deleteHandler = async () => {
     setIsLoading(true);
     try {
-      await axiosInstance.put(`/orders/acceptOrder/${order._id}`);
+      await deleteBook(book._id);
       toast({
         title: "Success",
-        description: "Order marked as paid successfully",
+        description: "Book deleted successfully",
       });
     } catch (err) {
       toast({
@@ -130,19 +128,16 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
   return (
     <>
       <TableRow>
-        <TableCell>{order.totalOrderPrice}</TableCell>
-        <TableCell>{order.course?.title}</TableCell>
-        <TableCell>{order.user?.email}</TableCell>
-        <TableCell>{order.isPaid ? "yes" : "no"}</TableCell>
-        <TableCell>{new Date(order.paidAt).toDateString()}</TableCell>
-        <TableCell>{order.paymentMethodType}</TableCell>{" "}
+        <TableCell>{book.title}</TableCell>
+
         <TableCell>
-          <Button variant={"link"} asChild>
-            <a href={order.paymentReceipt} target="_blank">
-              open
-            </a>
-          </Button>
-        </TableCell>{" "}
+          <a href={book.bookUrl} target="_blank">
+            click to open link
+          </a>
+        </TableCell>
+        <TableCell>
+          <ImageCell url={book.image} />
+        </TableCell>
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
@@ -151,6 +146,17 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent>
+              <DropdownMenuLabel asChild>
+                <Link
+                  to={`/dashboard/books/${book._id}`}
+                  className="flex items-center gap-2"
+                >
+                  <CiEdit size={18} />
+                  Edit
+                </Link>
+              </DropdownMenuLabel>
+
+              <DropdownMenuSeparator />
               <DropdownMenuLabel>
                 <button
                   onClick={() => {
@@ -158,7 +164,8 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
                   }}
                   className="flex items-center justify-center gap-2"
                 >
-                  <MdOutlineSell size={18} /> Make it paid{" "}
+                  <AiFillDelete size={18} />
+                  Delete
                 </button>
               </DropdownMenuLabel>
             </DropdownMenuContent>
@@ -169,8 +176,8 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will give user right to
-                  watch the course.
+                  This action cannot be undone. This will permanently delete
+                  book and remove data from our servers.
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>

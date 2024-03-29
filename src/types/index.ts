@@ -85,4 +85,14 @@ export interface IOrder {
   paidAt: string;
   paymentMethodType: string;
   totalOrderPrice: number;
+  paymentReceipt: string;
+  paymentMethodTypeLabel: string;
+}
+export interface IBook {
+  title: string;
+  image: string;
+  bookUrl: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
 }

@@ -4,7 +4,7 @@ import { BiSolidCategoryAlt } from "react-icons/bi";
 import { MdOutlineCastForEducation } from "react-icons/md";
 import { PiStudentBold } from "react-icons/pi";
 import { TfiWrite } from "react-icons/tfi";
-import { FaMoneyBill1 } from "react-icons/fa6";
+import { FaAddressBook, FaMoneyBill1 } from "react-icons/fa6";
 
 export const navItems: NavItem[] = [
   {
@@ -21,6 +21,11 @@ export const navItems: NavItem[] = [
     title: "Categories",
     to: "/dashboard/categories",
     icon: <BiSolidCategoryAlt className="mr-1" />,
+  },
+  {
+    title: "Books",
+    to: "/dashboard/books",
+    icon: <FaAddressBook className="mr-1" />,
   },
   {
     title: "Courses",
