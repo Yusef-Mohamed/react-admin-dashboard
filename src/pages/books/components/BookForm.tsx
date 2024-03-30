@@ -1,6 +1,5 @@
 import { Button } from "../../../components/ui/button";
-import { Form, FormItem, FormLabel } from "../../../components/ui/form";
-import { Input } from "../../../components/ui/input";
+import { Form } from "../../../components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
 import React, { useState } from "react";
 import { useForm } from "react-hook-form";
@@ -9,7 +8,6 @@ import { useNavigate, useParams } from "react-router-dom";
 
 import { ApiError, IInputProps } from "../../../types";
 
-import { AiFillDelete } from "react-icons/ai";
 import FormFields from "../../../components/FormFields";
 import { createBook, editBook } from "../../../services/bookApis";
 import { toast } from "../../../components/ui/use-toast";
@@ -40,7 +38,6 @@ const BookForm: React.FC<BookFormProps> = ({
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const [image, setImage] = useState<File | null>(null);
   const nav = useNavigate();
   const inputs: MyInputProps[] = [
     {
@@ -69,9 +66,9 @@ const BookForm: React.FC<BookFormProps> = ({
       formData.append(key, value.toString());
     });
 
-    if (image) {
-      formData.append("image", image);
-    }
+    // if (image) {
+    //   formData.append("image", image);
+    // }
     try {
       if (isEdit) {
         await editBook(formData, id || "");
@@ -105,7 +102,7 @@ const BookForm: React.FC<BookFormProps> = ({
     <>
       <Form {...form}>
         <form onSubmit={form.handleSubmit(onSubmit)} className="w-full ">
-          <div>
+          {/* <div>
             <div className="flex items-center justify-center">
               <div className="relative flex items-center justify-center w-40 h-40 mb-10">
                 <img
@@ -127,9 +124,9 @@ const BookForm: React.FC<BookFormProps> = ({
                 )}
               </div>
             </div>
-          </div>
+          </div> */}
           <div className="grid w-full grid-cols-2 gap-2 mb-4">
-            <FormItem>
+            {/* <FormItem>
               <FormLabel htmlFor="name">Image</FormLabel>
               <Input
                 type="file"
@@ -142,7 +139,7 @@ const BookForm: React.FC<BookFormProps> = ({
                   }
                 }}
               />
-            </FormItem>
+            </FormItem> */}
             <FormFields<BookFormValue>
               inputs={inputs}
               form={form}

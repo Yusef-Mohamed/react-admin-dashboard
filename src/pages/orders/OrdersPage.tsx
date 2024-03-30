@@ -1,8 +1,5 @@
-import { Plus } from "lucide-react";
 import BreadCrumb from "../../components/BreadCrumb";
 import { Heading } from "../../components/Heading";
-import { Link } from "react-router-dom";
-import { Button } from "../../components/ui/button";
 import { Separator } from "../../components/ui/separator";
 import { useQuery } from "@tanstack/react-query";
 import OrdersTable from "./components/OrdersTable";
@@ -10,9 +7,19 @@ import { useState } from "react";
 import { IPagination, IOrder } from "../../types";
 import PaginationHandler from "../../components/PaginationHandler";
 import { axiosInstance } from "../../services/axios.config";
+import { Label } from "../../components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../components/ui/select";
+
 const breadcrumbItems = [{ title: "Orders", link: "/dashboard/orders" }];
 
 export default function OrdersPage() {
+  const [status, setStatus] = useState<string>("pending");
   const [pagination, setPagination] = useState<IPagination>({
     currentPage: 1,
     limit: 50,
@@ -22,7 +29,7 @@ export default function OrdersPage() {
   const { isLoading, error, data, refetch, isRefetching } = useQuery({
     queryKey: ["orders", `page=${pagination.currentPage}`],
     queryFn: async () => {
-      const response = await axiosInstance.get("/orders");
+      const response = await axiosInstance.get(`/orders?status=${status}`);
       const responseData = response.data as {
         paginationResult: IPagination;
         data: IOrder[];
@@ -47,12 +54,27 @@ export default function OrdersPage() {
             title={`Orders (${pagination.results})`}
             description="Manage orders"
           />
-
-          <Button asChild>
-            <Link to={"/dashboard/orders/new"}>
-              <Plus className="w-4 h-4 mr-2" /> Add New
-            </Link>
-          </Button>
+        </div>
+        <Separator />
+        <div>
+          <Label className="block mb-4">Status</Label>
+          <Select
+            onValueChange={(value) => {
+              setStatus(value);
+              setTimeout(() => {
+                refetch();
+              }, 100);
+            }}
+            defaultValue={status}
+          >
+            <SelectTrigger className="w-[180px] border text-start rounded-md px-4 py-2">
+              <SelectValue placeholder="Pending" />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="pending">Pending</SelectItem>
+              <SelectItem value="accepted">Accepted</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
         <Separator />
 

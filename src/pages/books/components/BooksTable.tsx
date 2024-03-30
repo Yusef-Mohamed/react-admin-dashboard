@@ -34,7 +34,6 @@ import {
 import { deleteBook } from "../../../services/bookApis";
 import { toast } from "../../../components/ui/use-toast";
 import { useState } from "react";
-import ImageCell from "../../../components/ImageCell";
 interface IBooksTableProps {
   books: IBook[];
   isLoading: boolean;
@@ -55,7 +54,7 @@ const BooksTable: React.FC<IBooksTableProps> = ({
             <TableHead>Title</TableHead>
             <TableHead>Link</TableHead>
 
-            <TableHead>Image</TableHead>
+            {/* <TableHead>Image</TableHead> */}
             <TableHead className="w-24"></TableHead>
           </TableRow>
         </TableHeader>
@@ -135,9 +134,9 @@ const BookRow: React.FC<{ book: IBook; refetch: () => void }> = ({
             click to open link
           </a>
         </TableCell>
-        <TableCell>
+        {/* <TableCell>
           <ImageCell url={book.image} />
-        </TableCell>
+        </TableCell> */}
         <TableCell>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>

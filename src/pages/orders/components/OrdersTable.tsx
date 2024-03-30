@@ -31,6 +31,7 @@ import {
 } from "../../../components/ui/alert-dialog";
 import { MdOutlineSell } from "react-icons/md";
 import { axiosInstance } from "../../../services/axios.config";
+import { cn } from "../../../lib/utils";
 interface IOrdersTableProps {
   orders: IOrder[];
   isLoading: boolean;
@@ -51,7 +52,7 @@ const OrdersTable: React.FC<IOrdersTableProps> = ({
             <TableHead>Total Price</TableHead>
             <TableHead>Course</TableHead>
             <TableHead>User email</TableHead>
-            <TableHead>Is paid</TableHead>
+            <TableHead>Status</TableHead>
             <TableHead>Paid at</TableHead>
             <TableHead>Paid with</TableHead>
             <TableHead>Recive</TableHead>
@@ -126,14 +127,24 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
       refetch();
     }
   };
-
+  console.log(order);
   return (
     <>
       <TableRow>
         <TableCell>{order.totalOrderPrice}</TableCell>
         <TableCell>{order.course?.title}</TableCell>
         <TableCell>{order.user?.email}</TableCell>
-        <TableCell>{order.isPaid ? "yes" : "no"}</TableCell>
+        <TableCell>
+          <span
+            className={cn(
+              "px-2 py-1 rounded-full text-white font-semibold",
+              order.status === "pending" && "bg-yellow-400",
+              order.status === "accepted" && "bg-green-400"
+            )}
+          >
+            {order.status}
+          </span>
+        </TableCell>
         <TableCell>{new Date(order.paidAt).toDateString()}</TableCell>
         <TableCell>{order.paymentMethodType}</TableCell>{" "}
         <TableCell>
@@ -169,8 +180,7 @@ const OrderRow: React.FC<{ order: IOrder; refetch: () => void }> = ({
               <AlertDialogHeader>
                 <AlertDialogTitle>Are you sure?</AlertDialogTitle>
                 <AlertDialogDescription>
-                  This action cannot be undone. This will give user right to
-                  watch the course.
+                  You will give access of this course to this user
                 </AlertDialogDescription>
               </AlertDialogHeader>
               <AlertDialogFooter>
