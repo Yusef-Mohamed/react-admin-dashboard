@@ -32,7 +32,8 @@ export interface IInputProps {
     | "textArea"
     | "select"
     | "file"
-    | "number";
+    | "number"
+    | "date";
   label: string;
   placeholder: string;
   hideOnEdit?: boolean;
@@ -92,7 +93,27 @@ export interface IOrder {
 export interface IBook {
   title: string;
   image: string;
+  country: string;
+  categoryBook: ICategory;
+  subCategory: ISubCategory;
   bookUrl: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface IEvent {
+  title: string;
+  description: string;
+  facebookUrl: string;
+  videoUrl: string;
+  date: string;
+  _id: string;
+  createdAt: string;
+  updatedAt: string;
+}
+export interface ISubCategory {
+  title: string;
+  categoryBook: ICategory;
   _id: string;
   createdAt: string;
   updatedAt: string;

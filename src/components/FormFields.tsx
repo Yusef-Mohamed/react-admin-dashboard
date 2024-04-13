@@ -1,4 +1,6 @@
 import { FieldValues, Path, UseFormReturn } from "react-hook-form";
+import { format } from "date-fns";
+
 import {
   FormControl,
   FormField,
@@ -26,6 +28,11 @@ interface FormFieldsProps<T extends FieldValues> {
   isEdit: boolean;
 }
 import { IInputProps } from "../types";
+import { cn } from "../lib/utils";
+import { Button } from "./ui/button";
+import { Popover, PopoverContent, PopoverTrigger } from "./ui/popover";
+import { CalendarIcon } from "lucide-react";
+import { Calendar } from "./ui/calendar";
 
 const FormFields = <T extends FieldValues>({
   inputs,
@@ -37,8 +44,50 @@ const FormFields = <T extends FieldValues>({
     <>
       {inputs.map((input, key) => {
         if (input.hideOnEdit && isEdit) return null;
+        if (input.type === "date") {
+          return (
+            <FormField
+              key={input.name}
+              control={form.control}
+              name={input.name}
+              render={({ field }) => (
+                <FormItem>
+                  <FormLabel>{input.label}</FormLabel>
 
-        if (input.type === "select") {
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={"outline"}
+                          className={cn(
+                            "w-full pl-3 text-left font-normal",
+                            !field.value && "text-muted-foreground"
+                          )}
+                        >
+                          {field.value ? (
+                            format(field.value, "PPP")
+                          ) : (
+                            <span>Pick a date</span>
+                          )}
+                          <CalendarIcon className="w-4 h-4 ml-auto opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value}
+                        onSelect={field.onChange}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+          );
+        } else if (input.type === "select") {
           return (
             <FormField
               key={key}

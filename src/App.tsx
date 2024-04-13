@@ -21,6 +21,12 @@ import OrdersPage from "./pages/orders/OrdersPage";
 import CourseDetails from "./pages/courses/CourseDetails";
 import BooksPage from "./pages/books/BooksPage";
 import BookFormPage from "./pages/books/BookFormPage";
+import EventsPage from "./pages/events/EventsPage";
+import EventFormPage from "./pages/events/EventFormPage";
+import BookCategoriesPage from "./pages/bookCategories/BookCategoriesPage";
+import BookCategoryFormPage from "./pages/bookCategories/BookCategoryFormPage";
+import BookSubCategoriesPage from "./pages/bookSubCategories/BookSubCategoriesPage";
+import BookSubCategoryFormPage from "./pages/bookSubCategories/BookSubCategoryFormPage";
 
 const queryClient = new QueryClient();
 
@@ -36,14 +42,28 @@ function App() {
                 <Route path="overview" element={<DashboardHome />} />
                 <Route path="users" element={<UsersPage />} />
                 <Route path="users/:id" element={<UserFormPage />} />
+                <Route path="events" element={<EventsPage />} />
+                <Route path="events/:id" element={<EventFormPage />} />
                 <Route path="categories" element={<CategoriesPage />} />
                 <Route path="categories/:id" element={<CategoryFormPage />} />
+                <Route path="bookCategories" element={<BookCategoriesPage />} />
+                <Route
+                  path="bookCategories/:id"
+                  element={<BookCategoryFormPage />}
+                />
+                <Route
+                  path="bookSubCategories"
+                  element={<BookSubCategoriesPage />}
+                />
+                <Route
+                  path="bookSubCategories/:id"
+                  element={<BookSubCategoryFormPage />}
+                />
                 <Route path="courses" element={<CoursesPage />} />
                 <Route path="courses/:id" element={<CourseFormPage />} />
                 <Route path="courses/:id/details" element={<CourseDetails />} />
                 <Route path="books" element={<BooksPage />} />
                 <Route path="books/:id" element={<BookFormPage />} />
-
                 <Route path="lessons" element={<LessonsPage />} />
                 <Route path="lessons/:id" element={<LessonFormPage />} />
                 <Route path="blogs" element={<BlogsPage />} />
