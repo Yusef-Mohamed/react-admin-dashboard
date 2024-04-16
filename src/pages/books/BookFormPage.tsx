@@ -23,7 +23,6 @@ export default function BookFormPage() {
       return response.data as IBook;
     },
   });
-
   return (
     <>
       <div className="flex-1 p-4 pt-6 space-y-4 md:p-8">
@@ -38,9 +37,13 @@ export default function BookFormPage() {
         {data && isEdit && (
           <BookForm
             isEdit={isEdit}
+            category={data?.categoryBook?._id}
+            subCategory={data?.subCategories?._id}
             defaultValues={{
               title: data.title,
               bookUrl: data.bookUrl,
+              country: data.country,
+              date: new Date(data.date),
             }}
           />
         )}

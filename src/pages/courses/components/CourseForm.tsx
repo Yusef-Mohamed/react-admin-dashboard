@@ -106,7 +106,6 @@ const CourseForm: React.FC<CourseFormProps> = ({
       setLoading(false);
       return;
     }
-    console.log(data.priceAfterDiscount);
     if (isNaN(Number(data.priceAfterDiscount)) && data.priceAfterDiscount) {
       form.setError("priceAfterDiscount", {
         type: "manual",
@@ -165,10 +164,10 @@ const CourseForm: React.FC<CourseFormProps> = ({
   return (
     <>
       <Form {...form}>
-        <form onSubmit={form.handleSubmit(onSubmit)} className=" w-full ">
+        <form onSubmit={form.handleSubmit(onSubmit)} className="w-full ">
           <div>
             <div className="flex items-center justify-center">
-              <div className="w-40 h-40 mb-10 flex items-center justify-center relative">
+              <div className="relative flex items-center justify-center w-40 h-40 mb-10">
                 <img
                   src={
                     image
@@ -180,7 +179,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
                 />
                 {image && (
                   <button
-                    className="absolute  right-0 w-8 h-8 bg-destructive rounded-full items-center justify-center text-background top-0 flex"
+                    className="absolute top-0 right-0 flex items-center justify-center w-8 h-8 rounded-full bg-destructive text-background"
                     onClick={() => setImage(null)}
                   >
                     <AiFillDelete />
@@ -189,7 +188,7 @@ const CourseForm: React.FC<CourseFormProps> = ({
               </div>
             </div>
           </div>
-          <div className="gap-2 w-full mb-4 grid grid-cols-2">
+          <div className="grid w-full grid-cols-2 gap-2 mb-4">
             <FormItem>
               <FormLabel htmlFor="name">Image</FormLabel>
               <Input
@@ -212,12 +211,12 @@ const CourseForm: React.FC<CourseFormProps> = ({
             />
           </div>
           {formError && (
-            <div className="text-red-500 text-sm mb-2">{formError}</div>
+            <div className="mb-2 text-sm text-red-500">{formError}</div>
           )}
           <Button
             disabled={loading}
             size={"lg"}
-            className="mx-auto w-fit block"
+            className="block mx-auto w-fit"
             type="submit"
           >
             {loading ? "Loading..." : "Submit"}

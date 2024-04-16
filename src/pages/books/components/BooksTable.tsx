@@ -46,6 +46,7 @@ const BooksTable: React.FC<IBooksTableProps> = ({
   books,
   refetch,
 }) => {
+  console.log("books", books);
   return (
     <>
       <Table className="border">
@@ -53,6 +54,10 @@ const BooksTable: React.FC<IBooksTableProps> = ({
           <TableRow>
             <TableHead>Title</TableHead>
             <TableHead>Link</TableHead>
+            <TableHead>County</TableHead>
+            <TableHead>Category</TableHead>
+            <TableHead>Sub Category</TableHead>
+            <TableHead>Date</TableHead>
 
             {/* <TableHead>Image</TableHead> */}
             <TableHead className="w-24"></TableHead>
@@ -134,6 +139,11 @@ const BookRow: React.FC<{ book: IBook; refetch: () => void }> = ({
             click to open link
           </a>
         </TableCell>
+        <TableCell>{book.country}</TableCell>
+        <TableCell>{book.categoryBook.title}</TableCell>
+        <TableCell>{book.subCategories.title}</TableCell>
+        <TableCell>{new Date(book.date).toLocaleDateString()}</TableCell>
+
         {/* <TableCell>
           <ImageCell url={book.image} />
         </TableCell> */}

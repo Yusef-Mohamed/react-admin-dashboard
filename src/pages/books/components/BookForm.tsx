@@ -1,7 +1,7 @@
 import { Button } from "../../../components/ui/button";
-import { Form } from "../../../components/ui/form";
+import { Form, FormItem, FormLabel } from "../../../components/ui/form";
 import { zodResolver } from "@hookform/resolvers/zod";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import * as z from "zod";
 import { useNavigate, useParams } from "react-router-dom";
@@ -12,9 +12,15 @@ import FormFields from "../../../components/FormFields";
 import { createBook, editBook } from "../../../services/bookApis";
 import { toast } from "../../../components/ui/use-toast";
 import { AxiosError } from "axios";
-import { useQuery } from "@tanstack/react-query";
 import { getCategories } from "../../../services/bookCategoryApis";
 import { getBookSubCategories } from "../../../services/bookSubCategoryApis";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "../../../components/ui/select";
 const formSchema = z.object({
   title: z.string().min(3, { message: "Title must be at least 3 characters" }),
   bookUrl: z
@@ -34,9 +40,13 @@ interface MyInputProps extends IInputProps {
 interface BookFormProps {
   isEdit: boolean;
   defaultValues?: BookFormValue;
+  subCategory?: string;
+  category?: string;
 }
 const BookForm: React.FC<BookFormProps> = ({
   isEdit,
+  category = "",
+  subCategory = "",
   defaultValues = {
     title: "",
     bookUrl: "",
@@ -47,22 +57,27 @@ const BookForm: React.FC<BookFormProps> = ({
   const { id } = useParams();
   const [loading, setLoading] = useState(false);
   const [formError, setFormError] = useState("");
-  const [selectedCategory, setSelectedCategory] = useState<string>("");
-  const [selectedSubCategory, setSelectedSubCategory] = useState<string>("");
-  const { data: categories } = useQuery({
-    queryKey: ["bookCategories", `limit-1000`],
-    queryFn: async () => {
-      const response = await getCategories(`?page=limit-1000`);
-      return response.data as ICategory[];
-    },
-  });
-  const { data: subCategories } = useQuery({
-    queryKey: ["bookSubCategories", `limit-1000`],
-    queryFn: async () => {
-      const response = await getBookSubCategories(`?page=limit-1000`);
-      return response.data as ISubCategory[];
-    },
-  });
+  const [categories, setCategories] = useState<ICategory[]>([]);
+  const [subCategories, setSubCategories] = useState<ISubCategory[]>([]);
+  const [selectedCategory, setSelectedCategory] = useState<string>(category);
+  const [selectedSubCategory, setSelectedSubCategory] =
+    useState<string>(subCategory);
+  const getMainCategories = async () => {
+    const response = await getCategories();
+    setCategories(response.data);
+  };
+  const getSubCategories = async (id: string) => {
+    const response = await getBookSubCategories(`?categoryBook=${id}`);
+    setSubCategories(response.data);
+  };
+  useEffect(() => {
+    getMainCategories();
+  }, []);
+  useEffect(() => {
+    if (selectedCategory) {
+      getSubCategories(selectedCategory);
+    }
+  }, [selectedCategory]);
   const nav = useNavigate();
   const inputs: MyInputProps[] = [
     {
@@ -97,11 +112,12 @@ const BookForm: React.FC<BookFormProps> = ({
   const onSubmit = async (data: BookFormValue) => {
     setLoading(true);
     setFormError("");
-
     const formData = new FormData();
     Object.entries(data).forEach(([key, value]) => {
       formData.append(key, value.toString());
     });
+    formData.append("categoryBook", selectedCategory);
+    formData.append("subCategories", selectedSubCategory);
     try {
       if (isEdit) {
         await editBook(formData, id || "");
@@ -130,7 +146,6 @@ const BookForm: React.FC<BookFormProps> = ({
       setLoading(false);
     }
   };
-
   return (
     <>
       <Form {...form}>
@@ -178,7 +193,51 @@ const BookForm: React.FC<BookFormProps> = ({
               form={form}
               loading={loading}
               isEdit={isEdit}
-            />
+            />{" "}
+            <FormItem>
+              <FormLabel htmlFor="name">Category</FormLabel>
+              <Select
+                required
+                value={selectedCategory}
+                onValueChange={(e) => {
+                  setSelectedCategory(e);
+                  setSelectedSubCategory("");
+                  setSubCategories([]);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {categories?.map((category) => (
+                    <SelectItem key={category._id} value={category._id}>
+                      {category.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
+            <FormItem>
+              <FormLabel htmlFor="name">Sub Categories</FormLabel>
+              <Select
+                value={selectedSubCategory}
+                required
+                onValueChange={(e) => {
+                  setSelectedSubCategory(e);
+                }}
+              >
+                <SelectTrigger className="w-full">
+                  <SelectValue placeholder="Select a sub category" />
+                </SelectTrigger>
+                <SelectContent>
+                  {subCategories?.map((category) => (
+                    <SelectItem key={category._id} value={category._id}>
+                      {category.title}
+                    </SelectItem>
+                  ))}
+                </SelectContent>
+              </Select>
+            </FormItem>
           </div>
           {formError && (
             <div className="mb-2 text-sm text-red-500">{formError}</div>

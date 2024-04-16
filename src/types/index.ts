@@ -95,7 +95,8 @@ export interface IBook {
   image: string;
   country: string;
   categoryBook: ICategory;
-  subCategory: ISubCategory;
+  subCategories: ISubCategory;
+  date: string;
   bookUrl: string;
   _id: string;
   createdAt: string;
